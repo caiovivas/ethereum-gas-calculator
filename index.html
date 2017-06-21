@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="ethicon.png">
     <title>Ethereum Gas Calculator</title>
     <style>
 	body {background-color: powderblue;}
@@ -90,7 +91,7 @@
 	          ethPriceBtc = data[0].price_btc;
 	          ethPriceUsd = data[0].price_usd;
 	     	});
-	     	$.getJSON("http://api.fixer.io/latest?base=USD", function(data) {
+	     	$.getJSON("https://api.fixer.io/latest?base=USD", function(data) {
 	          eurPriceUsd = data.rates.EUR;
 	          brlPriceUsd = data.rates.BRL;
 	          cadPriceUsd = data.rates.CAD;
