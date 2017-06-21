@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ethereum Gas Calculator</title>
+  </head>
+  <body>
+  <script src="jq.js" type="text/javascript"></script>
+  <h1>Ethereum Gas Calculator</h1>
+  <h2>Gas Limit:</h2>
+  <input type="number" id="gasLimitCounter"  onkeypress="updateFinalPrice()"><br>
+  <input type="button" onclick="numberShortcut('gasLimitCounter', 21000)" value="21000">
+  <input type="button" onclick="numberShortcut('gasLimitCounter', 200000)" value="200000">
+  <h2>Gas Price:</h2>
+  <input type="number" id="gasPriceCounter" onkeypress="updateFinalPrice()"><br>
+  <input type="button" onclick="numberShortcut('gasPriceCounter', 50)" value="50">
+  <br>
+  <h2>Final Price:</h2>
+  <span id="finalPrice"></span>
+  <script>
+  	var ethPriceBtc;
+  	var ethPriceUsd;
+
+  	window.onload = $(function() {
+  		updateFinalPrice();
+  		function getValues(){
+	   		$.getJSON("https://api.coinmarketcap.com/v1/ticker/ethereum/", function(data) {
+	          ethPriceBtc = data[0].price_btc;
+	          ethPriceUsd = data[0].price_usd;
+	     	});
+	     	updateFinalPrice();
+	     	setTimeout(getValues, 15000);
+   		}
+
+   		getValues();
+   });
+
+  	function numberShortcut(id, value){
+  		document.getElementById(id).value = value;
+  		updateFinalPrice();
+  	}
+
+  	function updateFinalPrice(){
+   		var gweiPrice = (document.getElementById('gasPriceCounter').value*document.getElementById('gasLimitCounter').value);
+   		var ethPrice = (gweiPrice*Math.pow(10,-9));
+   		document.getElementById("finalPrice").innerHTML = "gwei " +gweiPrice + "<br>eth " + ethPrice + "<br>btc " + ethPrice*ethPriceBtc + "<br>usd " + ethPrice*ethPriceUsd;
+   	}
+  </script>
+  </body>
+</html>
