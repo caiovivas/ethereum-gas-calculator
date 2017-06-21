@@ -3,8 +3,49 @@
   <head>
     <meta charset="UTF-8">
     <title>Ethereum Gas Calculator</title>
+    <style>
+	body {background-color: powderblue;}
+	h1   {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	h2   {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	h3   {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	p    {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	.outer {
+    display: table;
+    position: absolute;
+    height: 99%;
+    width: 99%;
+	}
+
+	.middle {
+	    display: table-cell;
+	    vertical-align: middle;
+	}
+
+	.inner {
+	    margin: auto;
+	    text-align: center;
+	}
+
+	.prices{
+		font-size: 130%;
+		margin-left: 45%;
+		width : 250px;
+		text-align: left;
+	}
+	html { 
+
+        background: url('bg.jpg') no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+  </style>
   </head>
   <body>
+  <div class="outer">
+  <div class="middle">
+  <div class="inner">
   <script src="jq.js" type="text/javascript"></script>
   <h1>Ethereum Gas Calculator</h1>
   <h2>Gas Limit:</h2>
@@ -13,13 +54,34 @@
   <input type="button" onclick="numberShortcut('gasLimitCounter', 200000)" value="200000">
   <h2>Gas Price:</h2>
   <input type="number" id="gasPriceCounter" onkeypress="updateFinalPrice()"><br>
+  <input type="button" onclick="numberShortcut('gasPriceCounter', 1)" value="1">
+  <input type="button" onclick="numberShortcut('gasPriceCounter', 5)" value="5">
+  <input type="button" onclick="numberShortcut('gasPriceCounter', 30)" value="30">
   <input type="button" onclick="numberShortcut('gasPriceCounter', 50)" value="50">
+  <input type="button" onclick="numberShortcut('gasPriceCounter', 60)" value="60">
   <br>
-  <h2>Final Price:</h2>
-  <span id="finalPrice"></span>
+  <h2>Final Cost:</h2>
+  <div class="prices">
+  <p id="finalPrice"></p>
+  </div>
+  <br>
+  <h2>Donations</h2>
+  <p>
+  Thanks for visiting!<br><br>
+  ETH 0x1896a32a99fbc1a70cc5e0221a3a7621e9c00d57<br>
+  BTC 1KVUQB5QaRriSLRWPKWuqZaTEsaqzDAJHi<br></p>
+  </div>
+  </div>
+  </div>
   <script>
-  	var ethPriceBtc;
-  	var ethPriceUsd;
+  	var ethPriceBtc = 0;
+  	var ethPriceUsd = 0;
+
+  	var eurPriceUsd = 0;
+  	var brlPriceUsd = 0;
+  	var cadPriceUsd = 0;
+  	var gbpPriceUsd = 0;
+  	var jpyPriceUsd = 0;
 
   	window.onload = $(function() {
   		updateFinalPrice();
@@ -27,6 +89,13 @@
 	   		$.getJSON("https://api.coinmarketcap.com/v1/ticker/ethereum/", function(data) {
 	          ethPriceBtc = data[0].price_btc;
 	          ethPriceUsd = data[0].price_usd;
+	     	});
+	     	$.getJSON("http://api.fixer.io/latest?base=USD", function(data) {
+	          eurPriceUsd = data.rates.EUR;
+	          brlPriceUsd = data.rates.BRL;
+	          cadPriceUsd = data.rates.CAD;
+	          gbpPriceUsd = data.rates.GBP;
+	          jpyPriceUsd = data.rates.JPY;
 	     	});
 	     	updateFinalPrice();
 	     	setTimeout(getValues, 15000);
@@ -43,7 +112,17 @@
   	function updateFinalPrice(){
    		var gweiPrice = (document.getElementById('gasPriceCounter').value*document.getElementById('gasLimitCounter').value);
    		var ethPrice = (gweiPrice*Math.pow(10,-9));
-   		document.getElementById("finalPrice").innerHTML = "gwei " +gweiPrice + "<br>eth " + ethPrice + "<br>btc " + ethPrice*ethPriceBtc + "<br>usd " + ethPrice*ethPriceUsd;
+   		var usdPrice = (ethPrice*ethPriceUsd);
+   		document.getElementById("finalPrice").innerHTML = "gwei&nbsp;" +gweiPrice.toFixed(0) + 
+   		"<br>eth&nbsp;" + ethPrice.toFixed(8) + 
+   		"<br>btc&nbsp;" + (ethPrice*ethPriceBtc).toFixed(8) + 
+   		"<br>usd&nbsp;" + usdPrice.toFixed(2) +
+   		"<br>eur&nbsp;" + (usdPrice*eurPriceUsd).toFixed(2) +
+   		"<br>brl&nbsp;" + (usdPrice*brlPriceUsd).toFixed(2) +
+   		"<br>cad&nbsp;" + (usdPrice*cadPriceUsd).toFixed(2) +
+   		"<br>gbp&nbsp;" + (usdPrice*gbpPriceUsd).toFixed(2) +
+   		"<br>jpy&nbsp;" + (usdPrice*jpyPriceUsd).toFixed(2)
+   		;
    	}
   </script>
   </body>
