@@ -10,4 +10,4 @@ Calculates transaction gas costs based on current Ether pricing and set gas limi
 Normal transactions should use 21000 gas limit, while other types of smart contracts (i.e. ICOs) may use a lot more.
 
 <b>Gas price:</b> Set the price (in gwei) you are willing to pay for each unit of gas. 
-Higher prices ensures your transactions get prioritized by the miners in order to get validated sooner.
+Higher prices ensure your transactions get prioritized by the miners and validated sooner.
